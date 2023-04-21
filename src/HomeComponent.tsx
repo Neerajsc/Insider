@@ -43,7 +43,7 @@ const HomeComponent = ({ navigation }:any ) => {
               style={styles.image}
               resizeMode="cover"
             />
-          </View>
+          </View> 
           <Text style={styles.description}>{item.description}</Text>
           <View style={styles.author}>
             <Text style={styles.authorText}>{item.author}</Text>
