@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView } from 'react-native';
-import { Card, Text, Image, Divider, Icon } from 'react-native-elements';
+import { View, StyleSheet, FlatList, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { Card, Text, Divider, Icon } from 'react-native-elements';
 import NewsDetailsComponent from './NewsDetailsComponent';
+import { Image } from '@rneui/themed';
+import Footer from './FooterComponent';
+import HeaderComponent from './HeaderComponent';
 
 
 
@@ -18,16 +21,36 @@ const HomeComponent = ({ navigation }:any ) => {
       })()
     }, []);
 
+    const searchIndex= (index : string)=>{
+      for (let i = 0; i < bookmarked.length; i++) {
+        const obj = bookmarked[i];
+        if(obj.index==index){
+          return true;
+        }
+      }
+      return false;
+    }
+
     const saveBookmark = ({item,index}:any) => {
-      item.isBookmarked=(!item.isBookmarked)
-      const updatedNews = news
-      updatedNews[index].isBookmarked = item.isBookmarked
-      setBookmarked(bookmarked => [...bookmarked, item]);
-      setNews(updatedNews);
-      // pass obj with id and compare that id with news and do delete and add bookmark according to that
+
+      if(searchIndex(index)){
+          // console.log(item.publishedAt)
+          // console.log("found data")
+          const updatedNews = news
+          updatedNews[index].isBookmarked = (!item.isBookmarked)
+          setNews(updatedNews);
+          const newArray = [...bookmarked];
+          const a = newArray.filter( elements =>elements.item.publishedAt != item.publishedAt );
+          setBookmarked(a);
+      }else{
+        item.isBookmarked=(!item.isBookmarked)
+        const updatedNews = news
+        updatedNews[index].isBookmarked = item.isBookmarked
+        setBookmarked(bookmarked => [...bookmarked, {item,index}]);
+        setNews(updatedNews);
+      }
     };
   
-
     const renderItem = ({ item, index }: any) => (
       <TouchableOpacity onPress={() => navigation.navigate('NewsDetails', { news: item })}>
         <Card containerStyle={styles.card}>
@@ -38,10 +61,11 @@ const HomeComponent = ({ navigation }:any ) => {
               source={
                 item.urlToImage
                   ? { uri: item.urlToImage }
-                  : require('./images/pic.jpg')
+                  : require('./images/123.png')
               }
               style={styles.image}
               resizeMode="cover"
+              PlaceholderContent={<ActivityIndicator />}
             />
           </View> 
           <Text style={styles.description}>{item.description}</Text>
@@ -56,7 +80,7 @@ const HomeComponent = ({ navigation }:any ) => {
               ) : (
                 <Icon name="heart-o" type="font-awesome" color="white" />
               )}
-        </TouchableOpacity>
+            </TouchableOpacity>
             </View>
           </View>
         </Card>
@@ -67,18 +91,8 @@ const HomeComponent = ({ navigation }:any ) => {
       
         <View style={styles.container}>
 
-          <View style={styles.header}>
-            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
-              <Text style={styles.headerText}>Profile</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Bookmarks')}>
-              <Text style={styles.headerText}>Bookmarks</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-              <Text style={styles.headerText}>Logout</Text>
-            </TouchableOpacity>
-          </View>
-
+          
+        <HeaderComponent navigation={navigation}/>
         {news.length > 0  &&
         <FlatList
           data={news}
@@ -87,17 +101,8 @@ const HomeComponent = ({ navigation }:any ) => {
           contentContainerStyle={styles.flatListContent}
         />
         }
-        <View style={styles.footer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
-          <Icon name='rowing'  size={24}  />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
-          <Icon name='search' type='font-awesome-5' size={24} color='#FFF' solid />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Bookmarks')}>
-          <Icon name='bookmark' type='font-awesome-5' size={24} color='#FFF' solid />
-        </TouchableOpacity>
-      </View>
+        <Footer navigation={navigation}/>
+
         </View>
       
     );
@@ -128,9 +133,12 @@ const styles = StyleSheet.create({
     height: 200,
     overflow: 'hidden',
     borderRadius: 10,
+    margin:10
   },
   image: {
-    flex: 1,
+    // flex: 1,
+    height:"100%",
+    width:"100%"
   },
   description: {
     fontSize: 16,

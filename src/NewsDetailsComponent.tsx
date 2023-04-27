@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import FooterComponent from './FooterComponent';
 
 
 
@@ -18,7 +19,9 @@ const NewsDetailsComponent = ({ route,navigation }:any) => {
         <Text style={styles.description}>{news.description}</Text>
         <Text style={styles.content}>{news.content}</Text>
       </View>
+      <FooterComponent navigation={navigation}/>
     </View>
+
   );
 };
 

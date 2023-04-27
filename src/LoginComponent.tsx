@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import { Image } from 'react-native-elements/dist/image/Image';
 import {responsiveHeight, responsiveWidth, responsiveFontSize,} from 'react-native-responsive-dimensions';
+import store from './store/store';
+import {PASSWORD, USERDATA} from './actions/UserAction';
+import { Alert } from 'react-native';
 
-const Login = () => {
+const Login = ({navigation}:any) => {
+  const [userName, setuserName] = useState('');
+  const [password, setpassword] = useState('');
+
+  const loginFunction = ()=>{
+    if(userName=='neeraj'){
+      if(password=='neeraj'){
+        store.dispatch({type: USERDATA, payload: {userName,password}});
+        console.log(userName,password)
+        navigation.navigate('Home')
+      }
+      else{
+        Alert.alert('Error','Invalid Password')
+      }
+    }else{
+      Alert.alert('Error','Invalid Credential')
+    }
+  }
+
   return (
     <View style={styles.container}>
         <Image style={styles.logo} source={require("./images/news.png")}/>
-      <Input placeholder="Username" />
-      <Input placeholder="Password" secureTextEntry />
+      <Input placeholder="Username" onChangeText={text=>setuserName(text)}/>
+      <Input placeholder="Password" secureTextEntry onChangeText={text => setpassword(text)} />
       <Button
               title="Login"
               loading={false}
@@ -25,7 +46,7 @@ const Login = () => {
                 width: "40%",
                 marginVertical: 10,
               }}
-              onPress={() => console.log('aye')}
+              onPress={loginFunction}
             />
 
         <Text style={styles.registerStyle}>Not Registered! click here</Text>
