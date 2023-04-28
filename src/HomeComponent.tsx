@@ -16,7 +16,7 @@ const HomeComponent = ({ navigation }:any ) => {
         (async ()=>{ const response = await fetch('https://newsapi.org/v2/top-headlines?country=in&sortBy=popularity&apiKey=0c42002e6ece49c6b29e788e00bcc870')
         const data = await response.json()
         const updatedNews = data.articles.map((item: [])  => ({ ...item, isBookmarked: false }));
-        // console.log(updatedNews[0].isBookmarked)
+        // console.log(updatedNews[0])/
         setNews(updatedNews)
       })()
     }, []);
@@ -101,7 +101,7 @@ const HomeComponent = ({ navigation }:any ) => {
           contentContainerStyle={styles.flatListContent}
         />
         }
-        <Footer navigation={navigation}/>
+        <Footer navigation={navigation} bookmarked={bookmarked}/>
 
         </View>
       

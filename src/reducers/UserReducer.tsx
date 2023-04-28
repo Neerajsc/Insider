@@ -2,7 +2,8 @@ import {USERDATA,PASSWORD} from '../actions/UserAction'
 
 const initialState = {
     userName:'',
-    password:''
+    password:'',
+    isAuthenticate: false
 }
 
 const userReducer = (state = initialState, action: any) =>{
@@ -11,7 +12,8 @@ const userReducer = (state = initialState, action: any) =>{
             return {
                 ...state,
                 userName: action.payload.userName,
-                password: action.payload.password
+                password: action.payload.password,
+                isAuthenticate: true
             }
         
         default:

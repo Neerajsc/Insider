@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import { Image } from 'react-native-elements/dist/image/Image';
@@ -6,17 +6,31 @@ import {responsiveHeight, responsiveWidth, responsiveFontSize,} from 'react-nati
 import store from './store/store';
 import {PASSWORD, USERDATA} from './actions/UserAction';
 import { Alert } from 'react-native';
+import { connect } from 'react-redux';
 
-const Login = ({navigation}:any) => {
+type auth = {
+  auth: boolean;
+};
+
+const Login = (props:any) => {
   const [userName, setuserName] = useState('');
   const [password, setpassword] = useState('');
+//stateprefrence 
+  useEffect(()=>{
+    if(props.auth){
+      props.navigation.navigate('Home')
+    }
+    else{
+      props.navigation.navigate('Login')
+    }
+  },[])
 
   const loginFunction = ()=>{
     if(userName=='neeraj'){
       if(password=='neeraj'){
         store.dispatch({type: USERDATA, payload: {userName,password}});
         console.log(userName,password)
-        navigation.navigate('Home')
+        props.navigation.navigate('Home')
       }
       else{
         Alert.alert('Error','Invalid Password')
@@ -78,4 +92,10 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Login;
+const mapStateToProps = (state: any) => {
+  return {    
+    userName: state.isAuthenticate,
+  };
+};
+
+export default connect(mapStateToProps)(Login);

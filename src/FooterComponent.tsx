@@ -4,7 +4,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements'
 
-const FooterComponent = ({ navigation }:any) => {
+const FooterComponent = ({bookmarked, navigation }:any) => {
   return (
     <View style={styles.footer}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
@@ -13,7 +13,7 @@ const FooterComponent = ({ navigation }:any) => {
         <TouchableOpacity onPress={() => navigation.navigate('Search')}>
           <Icon name='search' type='font-awesome-5' size={24} color='#FFF' solid />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Bookmarks')}>
+        <TouchableOpacity onPress={() => navigation.navigate('Bookmarked', {bookmarked:bookmarked})}>
           <Icon name='bookmark' type='font-awesome-5' size={24} color='#FFF' solid />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
